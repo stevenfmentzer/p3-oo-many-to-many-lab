@@ -1,20 +1,28 @@
 class Author:
     all = []
     def __init__(self,name):
-        if not isinstance(name, str):
-            raise Exception("name must be type 'string'")
-        else: 
+
             self.name = name
             self.__class__.all.append(self)
 
+    @property
+    def name(self):
+        return self._name
+    
+    @name.setter
+    def name(self, value):
+        if not isinstance(value, str):
+            raise Exception("name must be type 'string'")
+        else: 
+            self._name = value
+
     def contracts(self):
-        print(self.name)
-        print([contract.author for contract in Contract.all])
         return [contract for contract in Contract.all if contract.author == self]
 
 
     def books(self):
-        return [contract.book for contract in Contract.all if contract.author == self]
+        # return [contract.book for contract in Contract.all if contract.author == self]
+        return [contract.book for contract in self.contracts()]
 
     def sign_contract(self, book, date, royalties): 
         if not isinstance(book, Book) or not isinstance(date, str) or not isinstance(royalties, int):
@@ -28,10 +36,26 @@ class Author:
 class Book:
     all = []
     def __init__(self, title):
-        if not isinstance(title, str):
-            raise Exception("title must be type 'string'")
+
         self.title = title
         self.__class__.all.append(self)
+
+    @property
+    def title(self):
+        return self._title
+    
+    @title.setter
+    def title(self, value):
+        if not isinstance(value, str):
+            raise Exception("title must be type 'string'")
+        else:
+            self._title = value
+
+    def contracts(self):
+        return [contract for contract in Contract. all if contract.book == self]
+    
+    def authors(self):
+        return [contract.author for contract in self.contracts()]
 
 class Contract:
     all = []
